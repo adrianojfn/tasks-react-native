@@ -1,8 +1,10 @@
 // Default archive for styles
 
 export default {
+    fontFamily: '',
     colors: {
-        fontFamily: '',
-        secondary: '#FFF'
+        secondary: '#FFF',
+        mainText: '#222',
+        subText: '#555'
     }
 }
