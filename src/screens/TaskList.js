@@ -4,6 +4,7 @@ import React, { Component } from "react";
 import { View, Text, ImageBackground, StyleSheet, FlatList, TouchableOpacity, Platform, Alert } from 'react-native'
 
 import Icon from 'react-native-vector-icons/FontAwesome'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // Import default styles
 import commonStyles from "../commonStyles";
@@ -18,29 +19,25 @@ import 'moment/locale/pt-br'
 import Task from "../components/Task";
 import AddTask from "./AddTask";
 
+const initialState = { 
+    showDoneTasks: true,
+    showAddTask: false,
+    visibleTasks: [],
+    tasks: []
+}
+
 export default class TaskList extends Component {
 
     // State of application
     state = {
-        showDoneTasks: true,
-        showAddTask: false,
-        visibleTasks: [],
-        tasks: [{
-            id: Math.random(),
-            desc: 'Buy Air Force 1',
-            estimateAt: new Date(),
-            doneAt: new Date(),
-        }, {
-            id: Math.random(),
-            desc: 'Read Stranger Things book',
-            estimateAt: new Date(),
-            doneAt: null
-        }]
+        ...initialState
     }
 
     // Call the method as soon as the component is mounted
-    componentDidMount = () => {
-        this.filterTasks()
+    componentDidMount = async () => {
+        const stateString = await AsyncStorage.getItem('tasksState')
+        const state = JSON.parse(stateString) || initialState
+        this.setState(state, this.filterTasks)
     }
 
     // Function to toggle visibility between completed and uncompleted tasks
@@ -59,6 +56,8 @@ export default class TaskList extends Component {
         }
 
         this.setState({ visibleTasks })
+
+        AsyncStorage.setItem('tasksState', JSON.stringify(this.state))
     }
 
     // Function that switches the completion status of tasks
