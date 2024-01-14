@@ -7,8 +7,11 @@ import commonStyles from '../commonStyles'
 export default class Auth extends Component {
 
     state = {
+        name: '',
         email: '',
-        password: ''
+        password: '',
+        confirmPassword: '',
+        stageNew: true
     }
 
     render() {
@@ -16,11 +19,28 @@ export default class Auth extends Component {
             <ImageBackground source={backgroundImage} style={styles.background}>
                 <Text style={styles.title}>Tasks</Text>
                 <View style={styles.formContainer}>
+                    <Text style={styles.subtitle}>
+                        {
+                            this.state.stageNew ? 'Create your account' : 'Enter your data'
+                        }
+                    </Text>
+                    {
+                        this.state.stageNew &&
+                        <TextInput placeholder='Name' value={this.state.name} style={styles.input} onChangeText={name => this.setState({ name })} />
+                    }
                     <TextInput placeholder='Email' value={this.state.email} style={styles.input} onChangeText={email => this.setState({ email })} />
-                    <TextInput placeholder='Password' value={this.state.password} style={styles.input} onChangeText={password => this.setState({ password })} />
+                    <TextInput placeholder='Password' value={this.state.password} style={styles.input} onChangeText={password => this.setState({ password })} secureTextEntry={true} />
+                    {
+                        this.state.stageNew &&
+                        <TextInput placeholder='Confirm Password' value={this.state.confirmPassword} style={styles.input} onChangeText={confirmPassword => this.setState({ confirmPassword })} />
+                    }
                     <TouchableOpacity>
                         <View style={styles.button}>
-                            <Text style={styles.buttonText}>Login</Text>
+                            <Text style={styles.buttonText}>
+                                {
+                                    this.state.stageNew ? 'Register' : 'Login'
+                                }
+                            </Text>
                         </View>
                     </TouchableOpacity>
                 </View>
@@ -40,6 +60,13 @@ const styles = StyleSheet.create({
         fontFamily: '',
         color: commonStyles.colors.secondary,
         fontSize: 70,
+        marginBottom: 10
+    },
+    subtitle: {
+        fontFamily: '',
+        color: '#FFF',
+        fontSize: 20,
+        textAlign: 'center',
         marginBottom: 10
     },
     formContainer: {
